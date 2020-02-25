@@ -1,0 +1,6 @@
+--lib qse-thread
+--project-base=quantum-script-extension-thread
+--source-is-separate
+--use-project=quantum-script.static
+--install-dev
+--install-inc=quantum-script-extension
