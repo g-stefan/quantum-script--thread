@@ -298,6 +298,12 @@ namespace Quantum {
 					return Context::getValueUndefined();
 				};
 
+				static TPointer<Variable> processorGetCount(VariableFunction *function, Variable *this_, VariableArray *arguments) {
+#ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
+					printf("- processor-get-count\n");
+#endif
+					return VariableNumber::newVariable(Processor::getCount());
+				};
 
 				void registerInternalExtension(Executive *executive) {
 					executive->registerInternalExtension("Thread", initExecutive);
@@ -331,9 +337,14 @@ namespace Quantum {
 					executive->setFunction2("Thread.prototype.isTerminated()",  threadIsTerminated);
 					executive->setFunction2("Thread.prototype.requestToTerminate()",  threadRequestToTerminate);
 					//
+					executive->compileStringX("if(Script.isNil(Atomic)){Atomic={};};");
 					executive->setFunction2("Atomic.isAtomic(x)", isAtomic);
 					executive->setFunction2("Atomic.prototype.get()",  atomicGetValue);
 					executive->setFunction2("Atomic.prototype.set(value)",  atomicSetValue);
+					//
+					executive->compileStringX("if(Script.isNil(Processor)){Processor={};};");
+					executive->setFunction2("Processor.getCount()", processorGetCount);
+					//
 
 					executive->compileStringX(extensionThreadSource);
 				};
