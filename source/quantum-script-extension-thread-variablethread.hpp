@@ -47,10 +47,9 @@ namespace Quantum {
 				class VariableThread :
 					public Variable {
 						XYO_DISALLOW_COPY_ASSIGN_MOVE(VariableThread);
+						XYO_DYNAMIC_TYPE_DEFINE(QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT, VariableThread);
 					protected:
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT static const char *strTypeThread;
-						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT static const char *typeThreadKey;
-						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT static const void *typeThread;
 					public:
 
 						XYO::Thread thread;
@@ -70,16 +69,7 @@ namespace Quantum {
 						TPointer<Variable> functionThis;
 						TPointer<Variable> functionArguments;
 
-						inline VariableThread() {
-							variableType = registerType(typeThread, typeThreadKey);
-							requestToTerminateThread = false;
-							returnValue = nullptr;
-							executive = nullptr;
-							sourceCode = "";
-							startedOk = false;
-							threadEnded = true;
-							returnedValue = Variable::newVariable();
-						};
+						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT VariableThread();
 
 						inline ~VariableThread() {
 							join();
@@ -89,9 +79,8 @@ namespace Quantum {
 
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT static Variable *newVariable();
 
-						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT String getType();
+						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT String getVariableType();
 
-						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT Variable &operatorReference(Symbol symbolId);
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT Variable *instancePrototype();
 
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT Variable *clone(SymbolList &inSymbolList);
@@ -104,13 +93,6 @@ namespace Quantum {
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT bool start(Executive *executive_, String sourceCode_, Variable *functionThis_, Variable *functionArguments_);
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT void join();
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT bool isRunning();
-						//
-						inline static bool isVariableThread(const Variable *value) {
-							if(typeThread == nullptr) {
-								typeThread = registerType(typeThread, typeThreadKey);
-							};
-							return (value->variableType == typeThread);
-						};
 
 				};
 

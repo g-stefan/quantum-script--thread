@@ -28,20 +28,26 @@ namespace Quantum {
 
 				using namespace XYO;
 
-				const char *VariableThread::typeThreadKey = "{EC4DDB48-CB72-4668-9F29-ACED0BD31287}";
-				const void *VariableThread::typeThread;
+				XYO_DYNAMIC_TYPE_IMPLEMENT(VariableThread, "{EC4DDB48-CB72-4668-9F29-ACED0BD31287}");
 				const char *VariableThread::strTypeThread = "Thread.Thread";
 
-				String VariableThread::getType() {
+				VariableThread::VariableThread() {
+					XYO_DYNAMIC_TYPE_PUSH(VariableThread);
+					requestToTerminateThread = false;
+					returnValue = nullptr;
+					executive = nullptr;
+					sourceCode = "";
+					startedOk = false;
+					threadEnded = true;
+					returnedValue = Variable::newVariable();
+				};
+
+				String VariableThread::getVariableType() {
 					return strTypeThread;
 				};
 
 				Variable *VariableThread::newVariable() {
 					return (Variable *) TMemory<VariableThread>::newMemory();
-				};
-
-				Variable &VariableThread::operatorReference(Symbol symbolId) {
-					return operatorReferenceX(symbolId, (Extension::Thread::getContext())->prototypeThread->prototype);
 				};
 
 				Variable *VariableThread::instancePrototype() {
@@ -84,12 +90,12 @@ namespace Quantum {
 
 							// CurrentThread.this_=thread;
 							Symbol currentThreadSymbol = Context::getSymbol("CurrentThread");
-							if(VariableUndefined::isVariableUndefined((Context::getGlobalObject())->operatorReferenceOwnProperty(currentThreadSymbol))) {
-								((Context::getGlobalObject())->operatorReferenceOwnProperty(currentThreadSymbol))=VariableObject::newVariable();
+							if(TIsTypeExact<VariableUndefined>((Context::getGlobalObject())->getPropertyBySymbol(currentThreadSymbol))) {
+								(Context::getGlobalObject())->setPropertyBySymbol(currentThreadSymbol,VariableObject::newVariable());
 							};
 
-							TPointerX<Variable> &currenThread = (Context::getGlobalObject())->operatorReferenceOwnProperty(currentThreadSymbol);
-							(currenThread->operatorReferenceOwnProperty(Context::getSymbol("this_")))=VariableResource::newVariable(thread, nullptr);
+							TPointer<Variable> currenThread = (Context::getGlobalObject())->getPropertyBySymbol(currentThreadSymbol);
+							currenThread->setPropertyBySymbol(Context::getSymbol("this_"), VariableResource::newVariable(thread, nullptr));
 
 							try {
 								functionThis = thread->functionThis->clone(*(thread->symbolList));
@@ -98,9 +104,9 @@ namespace Quantum {
 							};
 
 							try {
-								if(VariableArray::isVariableArray(thread->functionArguments)) {
+								if(TIsType<VariableArray>(thread->functionArguments)) {
 									functionArguments = thread->functionArguments->clone(*(thread->symbolList));
-									if(!VariableArray::isVariableArray(functionArguments)) {
+									if(!TIsType<VariableArray>(functionArguments)) {
 										functionArguments = VariableArray::newVariable();
 									};
 								} else {

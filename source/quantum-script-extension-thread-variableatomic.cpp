@@ -27,12 +27,11 @@ namespace Quantum {
 
 				using namespace XYO;
 
-				const char *VariableAtomic::typeAtomicKey = "{89225310-A868-445B-B620-171D417FC882}";
-				const void *VariableAtomic::typeAtomic;
+				XYO_DYNAMIC_TYPE_IMPLEMENT(VariableAtomic, "{89225310-A868-445B-B620-171D417FC882}");
 				const char *VariableAtomic::strTypeAtomic = "Thread.Atomic";
 
 				VariableAtomic::VariableAtomic() {
-					variableType = registerType(typeAtomic, typeAtomicKey);
+					XYO_DYNAMIC_TYPE_PUSH(VariableAtomic);
 					value = nullptr;
 				};
 
@@ -42,7 +41,7 @@ namespace Quantum {
 					};
 				};
 
-				String VariableAtomic::getType() {
+				String VariableAtomic::getVariableType() {
 					return strTypeAtomic;
 				};
 
@@ -51,10 +50,6 @@ namespace Quantum {
 					retV->value = new Atomic();
 					retV->value->referenceCount++;
 					return (Variable *) retV;
-				};
-
-				Variable &VariableAtomic::operatorReference(Symbol symbolId) {
-					return operatorReferenceX(symbolId, (Extension::Thread::getContext())->prototypeAtomic->prototype);
 				};
 
 				Variable *VariableAtomic::instancePrototype() {

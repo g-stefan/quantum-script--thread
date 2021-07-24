@@ -50,10 +50,9 @@ namespace Quantum {
 				class VariableAtomic :
 					public Variable {
 						XYO_DISALLOW_COPY_ASSIGN_MOVE(VariableAtomic);
+						XYO_DYNAMIC_TYPE_DEFINE(QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT, VariableAtomic);
 					protected:
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT static const char *strTypeAtomic;
-						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT static const char *typeAtomicKey;
-						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT static const void *typeAtomic;
 					public:
 
 						Atomic *value;
@@ -65,24 +64,14 @@ namespace Quantum {
 
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT static Variable *newVariable();
 
-						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT String getType();
+						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT String getVariableType();
 
-						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT Variable &operatorReference(Symbol symbolId);
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT Variable *instancePrototype();
 
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT Variable *clone(SymbolList &inSymbolList);
 
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT bool toBoolean();
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT String toString();
-
-						//
-						inline static bool isVariableAtomic(const Variable *value) {
-							if(typeAtomic == nullptr) {
-								typeAtomic = registerType(typeAtomic, typeAtomicKey);
-							};
-							return (value->variableType == typeAtomic);
-						};
-
 				};
 
 

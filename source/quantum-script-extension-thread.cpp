@@ -78,7 +78,7 @@ namespace Quantum {
 					threadContext->prototypeThread.newMemory();
 
 					defaultPrototypeFunction = (VariableFunction *)VariableFunction::newVariable(nullptr, nullptr, nullptr, functionThread, nullptr, nullptr);
-					((Context::getGlobalObject())->operatorReferenceOwnProperty(threadContext->symbolFunctionThread))=defaultPrototypeFunction;
+					(Context::getGlobalObject())->setPropertyBySymbol(threadContext->symbolFunctionThread,defaultPrototypeFunction);
 					threadContext->prototypeThread = defaultPrototypeFunction->prototype;
 
 					// Atomic=function(){};
@@ -86,7 +86,7 @@ namespace Quantum {
 					threadContext->prototypeAtomic.newMemory();
 
 					defaultPrototypeFunction = (VariableFunction *)VariableFunction::newVariable(nullptr, nullptr, nullptr, functionAtomic, nullptr, nullptr);
-					((Context::getGlobalObject())->operatorReferenceOwnProperty(threadContext->symbolFunctionAtomic))=defaultPrototypeFunction;
+					(Context::getGlobalObject())->setPropertyBySymbol(threadContext->symbolFunctionAtomic,defaultPrototypeFunction);
 					threadContext->prototypeAtomic = defaultPrototypeFunction->prototype;
 				};
 
@@ -94,14 +94,14 @@ namespace Quantum {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- script-is-thread\n");
 #endif
-					return VariableBoolean::newVariable(VariableThread::isVariableThread(arguments->index(0)));
+					return VariableBoolean::newVariable(TIsType<VariableThread>(arguments->index(0)));
 				};
 
 				static TPointer<Variable> isAtomic(VariableFunction *function, Variable *this_, VariableArray *arguments) {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- script-is-atomic\n");
 #endif
-					return VariableBoolean::newVariable(VariableAtomic::isVariableAtomic(arguments->index(0)));
+					return VariableBoolean::newVariable(TIsType<VariableAtomic>(arguments->index(0)));
 				};
 
 
@@ -119,7 +119,7 @@ namespace Quantum {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- thread-start\n");
 #endif
-					if(VariableThread::isVariableThread(this_)) {
+					if(TIsType<VariableThread>(this_)) {
 
 						String sourceCode = "return ";
 						sourceCode += (arguments->index(0))->toString();
@@ -134,7 +134,7 @@ namespace Quantum {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- thread-start-from-file\n");
 #endif
-					if(VariableThread::isVariableThread(this_)) {
+					if(TIsType<VariableThread>(this_)) {
 
 						String sourceCode = "return function(){";
 						String fileCode;
@@ -154,7 +154,7 @@ namespace Quantum {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- thread-start-from-string\n");
 #endif
-					if(VariableThread::isVariableThread(this_)) {
+					if(TIsType<VariableThread>(this_)) {
 
 						String sourceCode = "return function(){";
 						sourceCode += (arguments->index(0))->toString();
@@ -170,7 +170,7 @@ namespace Quantum {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- thread-get-returned-value\n");
 #endif
-					if(VariableThread::isVariableThread(this_)) {
+					if(TIsType<VariableThread>(this_)) {
 						return ((VariableThread *)this_)->returnedValue;
 					};
 					return Context::getValueUndefined();
@@ -181,7 +181,7 @@ namespace Quantum {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- thread-is-running\n");
 #endif
-					if(VariableThread::isVariableThread(this_)) {
+					if(TIsType<VariableThread>(this_)) {
 						return VariableBoolean::newVariable(((VariableThread *)this_)->isRunning());
 					};
 					return Context::getValueUndefined();
@@ -191,7 +191,7 @@ namespace Quantum {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- thread-is-terminated\n");
 #endif
-					if(VariableThread::isVariableThread(this_)) {
+					if(TIsType<VariableThread>(this_)) {
 						return VariableBoolean::newVariable(!((VariableThread *)this_)->isRunning());
 					};
 					return Context::getValueUndefined();
@@ -202,9 +202,9 @@ namespace Quantum {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- current-thread-is-request-to-terminate\n");
 #endif
-					if(VariableObject::isVariableObject(this_)) {
-						TPointerX<Variable> &thisThread_ = (this_->operatorReferenceOwnProperty(Context::getSymbol("this_")));
-						if(VariableResource::isVariableResource(thisThread_)) {
+					if(TIsType<VariableObject>(this_)) {
+						TPointer<Variable> thisThread_ = this_->getPropertyBySymbol(Context::getSymbol("this_"));
+						if(TIsType<VariableResource>(thisThread_)) {
 							return VariableBoolean::newVariable(((VariableThread *)(((VariableResource *)(thisThread_.value()))->resource))->requestToTerminateThread);
 						};
 					};
@@ -215,7 +215,7 @@ namespace Quantum {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- thread-join\n");
 #endif
-					if(VariableThread::isVariableThread(this_)) {
+					if(TIsType<VariableThread>(this_)) {
 						((VariableThread *)this_)->join();
 					};
 					return Context::getValueUndefined();
@@ -225,7 +225,7 @@ namespace Quantum {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- thread-request-to-terminate\n");
 #endif
-					if(VariableThread::isVariableThread(this_)) {
+					if(TIsType<VariableThread>(this_)) {
 						((VariableThread *)this_)->requestToTerminateThread = true;
 					};
 					return Context::getValueUndefined();
@@ -236,7 +236,7 @@ namespace Quantum {
 					printf("- atomic-get\n");
 #endif
 
-					if(!VariableAtomic::isVariableAtomic(this_)) {
+					if(!TIsType<VariableAtomic>(this_)) {
 						throw(Error("invalid parameter"));
 					};
 
@@ -261,33 +261,33 @@ namespace Quantum {
 					printf("- atomic-set\n");
 #endif
 
-					if(!VariableAtomic::isVariableAtomic(this_)) {
+					if(!TIsType<VariableAtomic>(this_)) {
 						throw(Error("invalid parameter"));
 					};
 
 					TPointerX<Variable> &value = arguments->index(0);
 
-					if(VariableBoolean::isVariableBoolean(value)) {
+					if(TIsType<VariableBoolean>(value)) {
 						((VariableAtomic *)( this_ ))->value->setBoolean(value->toBoolean());
 						return Context::getValueUndefined();
 					};
 
-					if(VariableNumber::isVariableNumber(value)) {
+					if(TIsType<VariableNumber>(value)) {
 						((VariableAtomic *)( this_ ))->value->setNumber(value->toNumber());
 						return Context::getValueUndefined();
 					};
 
-					if(VariableString::isVariableString(value)) {
+					if(TIsType<VariableString>(value)) {
 						((VariableAtomic *)( this_ ))->value->setString(value->toString());
 						return Context::getValueUndefined();
 					};
 
-					if(VariableNull::isVariableNull(value)) {
+					if(TIsType<VariableNull>(value)) {
 						((VariableAtomic *)( this_ ))->value->clear();
 						return Context::getValueUndefined();
 					};
 
-					if(VariableUndefined::isVariableUndefined(value)) {
+					if(TIsTypeExact<VariableUndefined>(value)) {
 						((VariableAtomic *)( this_ ))->value->clear();
 						return Context::getValueUndefined();
 					};
