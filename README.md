@@ -22,6 +22,7 @@ Atomic.prototype.set(value);
 Thread.newThread(function_,this_,arguments_);
 Thread.newThreadFromFile(function_,this_,arguments_);
 Thread.newThreadFromString(function_,this_,arguments_);
+Processor.getCount();
 ```
 
 ## License
