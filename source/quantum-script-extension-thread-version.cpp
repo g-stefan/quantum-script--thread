@@ -15,10 +15,10 @@ namespace Quantum {
 			namespace Thread {
 				namespace Version {
 
-					static const char *version_ = "2.1.0";
-					static const char *build_ = "21";
-					static const char *versionWithBuild_ = "2.1.0.21";
-					static const char *datetime_ = "2021-09-01 11:14:54";
+					static const char *version_ = "2.2.0";
+					static const char *build_ = "22";
+					static const char *versionWithBuild_ = "2.2.0.22";
+					static const char *datetime_ = "2021-11-15 16:51:53";
 
 					const char *version() {
 						return version_;
