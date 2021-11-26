@@ -8,7 +8,7 @@ if [ "$ACTION" = "" ]; then
 	ACTION=make
 fi
 
-echo "-> $ACTION quantum-script-extension-thread"
+echo "- $BUILD_PROJECT > $ACTION"
 
 cmdX(){
 	if ! "$@" ; then

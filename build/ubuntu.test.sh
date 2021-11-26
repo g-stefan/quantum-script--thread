@@ -3,7 +3,7 @@
 # http://unlicense.org/
 # Created by Grigore Stefan <g_stefan@yahoo.com>
 
-echo "-> test quantum-script-extension-thread"
+echo "- $BUILD_PROJECT > test"
 
 cmdX(){
 	if ! "$@" ; then
@@ -14,4 +14,3 @@ cmdX(){
 
 cmdX quantum-script --execution-time test/test.0001.js
 cmdX quantum-script --execution-time test/test.0002.js
-
