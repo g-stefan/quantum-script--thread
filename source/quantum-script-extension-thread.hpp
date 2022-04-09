@@ -11,23 +11,23 @@
 #define QUANTUM_SCRIPT_EXTENSION_THREAD_HPP
 
 #ifndef QUANTUM_SCRIPT_HPP
-#include "quantum-script.hpp"
+#	include "quantum-script.hpp"
 #endif
 
 #ifndef QUANTUM_SCRIPT_EXTENSION_THREAD__EXPORT_HPP
-#include "quantum-script-extension-thread--export.hpp"
+#	include "quantum-script-extension-thread--export.hpp"
 #endif
 
 #ifndef QUANTUM_SCRIPT_EXTENSION_THREAD_COPYRIGHT_HPP
-#include "quantum-script-extension-thread-copyright.hpp"
+#	include "quantum-script-extension-thread-copyright.hpp"
 #endif
 
 #ifndef QUANTUM_SCRIPT_EXTENSION_THREAD_LICENSE_HPP
-#include "quantum-script-extension-thread-license.hpp"
+#	include "quantum-script-extension-thread-license.hpp"
 #endif
 
 #ifndef QUANTUM_SCRIPT_EXTENSION_THREAD_VERSION_HPP
-#include "quantum-script-extension-thread-version.hpp"
+#	include "quantum-script-extension-thread-version.hpp"
 #endif
 
 namespace Quantum {
@@ -37,11 +37,10 @@ namespace Quantum {
 
 				using namespace Quantum::Script;
 
-				class ThreadContext:
-					public Object {
+				class ThreadContext : public Object {
 						XYO_DISALLOW_COPY_ASSIGN_MOVE(ThreadContext);
-					public:
 
+					public:
 						Symbol symbolFunctionThread;
 						Symbol symbolFunctionAtomic;
 						TPointerX<Prototype> prototypeThread;
@@ -61,4 +60,3 @@ namespace Quantum {
 };
 
 #endif
-

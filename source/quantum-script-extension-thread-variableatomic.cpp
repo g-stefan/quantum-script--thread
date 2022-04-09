@@ -19,7 +19,6 @@
 #include "quantum-script-extension-thread.hpp"
 #include "quantum-script-extension-thread-variableatomic.hpp"
 
-
 namespace Quantum {
 	namespace Script {
 		namespace Extension {
@@ -36,7 +35,7 @@ namespace Quantum {
 				};
 
 				VariableAtomic::~VariableAtomic() {
-					if(value != nullptr) {
+					if (value != nullptr) {
 						value->decReferenceCount();
 					};
 				};
@@ -49,7 +48,7 @@ namespace Quantum {
 					VariableAtomic *retV = TMemory<VariableAtomic>::newMemory();
 					retV->value = new Atomic();
 					retV->value->referenceCount++;
-					return (Variable *) retV;
+					return (Variable *)retV;
 				};
 
 				Variable *VariableAtomic::instancePrototype() {
@@ -57,7 +56,7 @@ namespace Quantum {
 				};
 
 				void VariableAtomic::activeDestructor() {
-					if(value != nullptr) {
+					if (value != nullptr) {
 						value->decReferenceCount();
 						value = nullptr;
 					};
@@ -66,7 +65,7 @@ namespace Quantum {
 				Variable *VariableAtomic::clone(SymbolList &inSymbolList) {
 					VariableAtomic *out = TMemory<VariableAtomic>::newMemory();
 					out->value = value;
-					if(out->value) {
+					if (out->value) {
 						out->value->incReferenceCount();
 					};
 					return out;
@@ -80,10 +79,7 @@ namespace Quantum {
 					return strTypeAtomic;
 				};
 
-
 			};
 		};
 	};
 };
-
-

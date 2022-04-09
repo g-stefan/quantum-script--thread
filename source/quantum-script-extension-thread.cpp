@@ -15,7 +15,7 @@
 #include "quantum-script-extension-thread-license.hpp"
 #include "quantum-script-extension-thread.hpp"
 #ifndef QUANTUM_SCRIPT_EXTENSION_THREAD_NO_VERSION
-#include "quantum-script-extension-thread-version.hpp"
+#	include "quantum-script-extension-thread-version.hpp"
 #endif
 //
 #include "quantum-script-variablenull.hpp"
@@ -78,7 +78,7 @@ namespace Quantum {
 					threadContext->prototypeThread.newMemory();
 
 					defaultPrototypeFunction = (VariableFunction *)VariableFunction::newVariable(nullptr, nullptr, nullptr, functionThread, nullptr, nullptr);
-					(Context::getGlobalObject())->setPropertyBySymbol(threadContext->symbolFunctionThread,defaultPrototypeFunction);
+					(Context::getGlobalObject())->setPropertyBySymbol(threadContext->symbolFunctionThread, defaultPrototypeFunction);
 					threadContext->prototypeThread = defaultPrototypeFunction->prototype;
 
 					// Atomic=function(){};
@@ -86,7 +86,7 @@ namespace Quantum {
 					threadContext->prototypeAtomic.newMemory();
 
 					defaultPrototypeFunction = (VariableFunction *)VariableFunction::newVariable(nullptr, nullptr, nullptr, functionAtomic, nullptr, nullptr);
-					(Context::getGlobalObject())->setPropertyBySymbol(threadContext->symbolFunctionAtomic,defaultPrototypeFunction);
+					(Context::getGlobalObject())->setPropertyBySymbol(threadContext->symbolFunctionAtomic, defaultPrototypeFunction);
 					threadContext->prototypeAtomic = defaultPrototypeFunction->prototype;
 				};
 
@@ -104,7 +104,6 @@ namespace Quantum {
 					return VariableBoolean::newVariable(TIsType<VariableAtomic>(arguments->index(0)));
 				};
 
-
 				static TPointer<Variable> currentThreadSleep(VariableFunction *function, Variable *this_, VariableArray *arguments) {
 #ifdef QUANTUM_SCRIPT_VM_DEBUG_RUNTIME
 					printf("- current-thread-sleep\n");
@@ -114,12 +113,11 @@ namespace Quantum {
 					return Context::getValueUndefined();
 				};
 
-
 				static TPointer<Variable> threadStart(VariableFunction *function, Variable *this_, VariableArray *arguments) {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- thread-start\n");
 #endif
-					if(TIsType<VariableThread>(this_)) {
+					if (TIsType<VariableThread>(this_)) {
 
 						String sourceCode = "return ";
 						sourceCode += (arguments->index(0))->toString();
@@ -134,11 +132,11 @@ namespace Quantum {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- thread-start-from-file\n");
 #endif
-					if(TIsType<VariableThread>(this_)) {
+					if (TIsType<VariableThread>(this_)) {
 
 						String sourceCode = "return function(){";
 						String fileCode;
-						if(Shell::fileGetContents((arguments->index(0))->toString(), fileCode)) {
+						if (Shell::fileGetContents((arguments->index(0))->toString(), fileCode)) {
 							sourceCode += fileCode;
 							sourceCode += "};";
 
@@ -149,12 +147,11 @@ namespace Quantum {
 					return Context::getValueUndefined();
 				};
 
-
 				static TPointer<Variable> threadStartFromString(VariableFunction *function, Variable *this_, VariableArray *arguments) {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- thread-start-from-string\n");
 #endif
-					if(TIsType<VariableThread>(this_)) {
+					if (TIsType<VariableThread>(this_)) {
 
 						String sourceCode = "return function(){";
 						sourceCode += (arguments->index(0))->toString();
@@ -165,23 +162,21 @@ namespace Quantum {
 					return Context::getValueUndefined();
 				};
 
-
 				static TPointer<Variable> threadGetReturnedValue(VariableFunction *function, Variable *this_, VariableArray *arguments) {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- thread-get-returned-value\n");
 #endif
-					if(TIsType<VariableThread>(this_)) {
+					if (TIsType<VariableThread>(this_)) {
 						return ((VariableThread *)this_)->returnedValue;
 					};
 					return Context::getValueUndefined();
 				};
 
-
 				static TPointer<Variable> threadIsRunning(VariableFunction *function, Variable *this_, VariableArray *arguments) {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- thread-is-running\n");
 #endif
-					if(TIsType<VariableThread>(this_)) {
+					if (TIsType<VariableThread>(this_)) {
 						return VariableBoolean::newVariable(((VariableThread *)this_)->isRunning());
 					};
 					return Context::getValueUndefined();
@@ -191,20 +186,19 @@ namespace Quantum {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- thread-is-terminated\n");
 #endif
-					if(TIsType<VariableThread>(this_)) {
+					if (TIsType<VariableThread>(this_)) {
 						return VariableBoolean::newVariable(!((VariableThread *)this_)->isRunning());
 					};
 					return Context::getValueUndefined();
 				};
 
-
 				static TPointer<Variable> currentThreadIsRequestToTerminate(VariableFunction *function, Variable *this_, VariableArray *arguments) {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- current-thread-is-request-to-terminate\n");
 #endif
-					if(TIsType<VariableObject>(this_)) {
+					if (TIsType<VariableObject>(this_)) {
 						TPointer<Variable> thisThread_ = this_->getPropertyBySymbol(Context::getSymbol("this_"));
-						if(TIsType<VariableResource>(thisThread_)) {
+						if (TIsType<VariableResource>(thisThread_)) {
 							return VariableBoolean::newVariable(((VariableThread *)(((VariableResource *)(thisThread_.value()))->resource))->requestToTerminateThread);
 						};
 					};
@@ -215,7 +209,7 @@ namespace Quantum {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- thread-join\n");
 #endif
-					if(TIsType<VariableThread>(this_)) {
+					if (TIsType<VariableThread>(this_)) {
 						((VariableThread *)this_)->join();
 					};
 					return Context::getValueUndefined();
@@ -225,7 +219,7 @@ namespace Quantum {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- thread-request-to-terminate\n");
 #endif
-					if(TIsType<VariableThread>(this_)) {
+					if (TIsType<VariableThread>(this_)) {
 						((VariableThread *)this_)->requestToTerminateThread = true;
 					};
 					return Context::getValueUndefined();
@@ -236,64 +230,62 @@ namespace Quantum {
 					printf("- atomic-get\n");
 #endif
 
-					if(!TIsType<VariableAtomic>(this_)) {
+					if (!TIsType<VariableAtomic>(this_)) {
 						throw(Error("invalid parameter"));
 					};
 
-					if(((VariableAtomic *)( this_ ))->value->atomicType == Atomic::typeBoolean) {
-						return VariableBoolean::newVariable(((VariableAtomic *)( this_ ))->value->valueBooloean);
+					if (((VariableAtomic *)(this_))->value->atomicType == Atomic::typeBoolean) {
+						return VariableBoolean::newVariable(((VariableAtomic *)(this_))->value->valueBooloean);
 					};
 
-					if(((VariableAtomic *)( this_ ))->value->atomicType == Atomic::typeNumber) {
-						return VariableNumber::newVariable(((VariableAtomic *)( this_ ))->value->valueNumber);
+					if (((VariableAtomic *)(this_))->value->atomicType == Atomic::typeNumber) {
+						return VariableNumber::newVariable(((VariableAtomic *)(this_))->value->valueNumber);
 					};
 
-					if(((VariableAtomic *)( this_ ))->value->atomicType == Atomic::typeString) {
-						return VariableString::newVariable(((VariableAtomic *)( this_ ))->value->valueString);
+					if (((VariableAtomic *)(this_))->value->atomicType == Atomic::typeString) {
+						return VariableString::newVariable(((VariableAtomic *)(this_))->value->valueString);
 					};
 
 					return VariableNull::newVariable();
 				};
-
 
 				static TPointer<Variable> atomicSetValue(VariableFunction *function, Variable *this_, VariableArray *arguments) {
 #ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
 					printf("- atomic-set\n");
 #endif
 
-					if(!TIsType<VariableAtomic>(this_)) {
+					if (!TIsType<VariableAtomic>(this_)) {
 						throw(Error("invalid parameter"));
 					};
 
 					TPointerX<Variable> &value = arguments->index(0);
 
-					if(TIsType<VariableBoolean>(value)) {
-						((VariableAtomic *)( this_ ))->value->setBoolean(value->toBoolean());
+					if (TIsType<VariableBoolean>(value)) {
+						((VariableAtomic *)(this_))->value->setBoolean(value->toBoolean());
 						return Context::getValueUndefined();
 					};
 
-					if(TIsType<VariableNumber>(value)) {
-						((VariableAtomic *)( this_ ))->value->setNumber(value->toNumber());
+					if (TIsType<VariableNumber>(value)) {
+						((VariableAtomic *)(this_))->value->setNumber(value->toNumber());
 						return Context::getValueUndefined();
 					};
 
-					if(TIsType<VariableString>(value)) {
-						((VariableAtomic *)( this_ ))->value->setString(value->toString());
+					if (TIsType<VariableString>(value)) {
+						((VariableAtomic *)(this_))->value->setString(value->toString());
 						return Context::getValueUndefined();
 					};
 
-					if(TIsType<VariableNull>(value)) {
-						((VariableAtomic *)( this_ ))->value->clear();
+					if (TIsType<VariableNull>(value)) {
+						((VariableAtomic *)(this_))->value->clear();
 						return Context::getValueUndefined();
 					};
 
-					if(TIsTypeExact<VariableUndefined>(value)) {
-						((VariableAtomic *)( this_ ))->value->clear();
+					if (TIsTypeExact<VariableUndefined>(value)) {
+						((VariableAtomic *)(this_))->value->clear();
 						return Context::getValueUndefined();
 					};
 
-
-					((VariableAtomic *)( this_ ))->value->setString(value->toString());
+					((VariableAtomic *)(this_))->value->setString(value->toString());
 
 					return Context::getValueUndefined();
 				};
@@ -324,23 +316,23 @@ namespace Quantum {
 					newContext(executive, extensionId);
 
 					executive->compileStringX("if(Script.isNil(CurrentThread)){CurrentThread={};};");
-					executive->setFunction2("CurrentThread.sleep(count)",  currentThreadSleep);
-					executive->setFunction2("CurrentThread.isRequestToTerminate()",  currentThreadIsRequestToTerminate);
+					executive->setFunction2("CurrentThread.sleep(count)", currentThreadSleep);
+					executive->setFunction2("CurrentThread.isRequestToTerminate()", currentThreadIsRequestToTerminate);
 					//
 					executive->setFunction2("Thread.isThread(x)", isThread);
-					executive->setFunction2("Thread.prototype.start(function_,this_,arguments_)",  threadStart);
-					executive->setFunction2("Thread.prototype.startFromFile(file_,this_,arguments_)",  threadStartFromFile);
-					executive->setFunction2("Thread.prototype.startFromString(string_,this_,arguments_)",  threadStartFromString);
-					executive->setFunction2("Thread.prototype.join()",  threadJoin);
-					executive->setFunction2("Thread.prototype.getReturnedValue()",  threadGetReturnedValue);
-					executive->setFunction2("Thread.prototype.isRunning()",  threadIsRunning);
-					executive->setFunction2("Thread.prototype.isTerminated()",  threadIsTerminated);
-					executive->setFunction2("Thread.prototype.requestToTerminate()",  threadRequestToTerminate);
+					executive->setFunction2("Thread.prototype.start(function_,this_,arguments_)", threadStart);
+					executive->setFunction2("Thread.prototype.startFromFile(file_,this_,arguments_)", threadStartFromFile);
+					executive->setFunction2("Thread.prototype.startFromString(string_,this_,arguments_)", threadStartFromString);
+					executive->setFunction2("Thread.prototype.join()", threadJoin);
+					executive->setFunction2("Thread.prototype.getReturnedValue()", threadGetReturnedValue);
+					executive->setFunction2("Thread.prototype.isRunning()", threadIsRunning);
+					executive->setFunction2("Thread.prototype.isTerminated()", threadIsTerminated);
+					executive->setFunction2("Thread.prototype.requestToTerminate()", threadRequestToTerminate);
 					//
 					executive->compileStringX("if(Script.isNil(Atomic)){Atomic={};};");
 					executive->setFunction2("Atomic.isAtomic(x)", isAtomic);
-					executive->setFunction2("Atomic.prototype.get()",  atomicGetValue);
-					executive->setFunction2("Atomic.prototype.set(value)",  atomicSetValue);
+					executive->setFunction2("Atomic.prototype.get()", atomicGetValue);
+					executive->setFunction2("Atomic.prototype.set(value)", atomicSetValue);
 					//
 					executive->compileStringX("if(Script.isNil(Processor)){Processor={};};");
 					executive->setFunction2("Processor.getCount()", processorGetCount);

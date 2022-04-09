@@ -47,7 +47,7 @@ namespace Quantum {
 				};
 
 				Variable *VariableThread::newVariable() {
-					return (Variable *) TMemory<VariableThread>::newMemory();
+					return (Variable *)TMemory<VariableThread>::newMemory();
 				};
 
 				Variable *VariableThread::instancePrototype() {
@@ -84,14 +84,14 @@ namespace Quantum {
 					TPointer<Variable> threadFunction;
 					TPointer<Variable> functionThis;
 					TPointer<Variable> functionArguments;
-					if(ExecutiveX::initExecutive(thread->executive->mainCmdN, thread->executive->mainCmdS, thread->executive->applicationInitExecutive)) {
-						if(ExecutiveX::executeString((char *)thread->sourceCode.value())) {
+					if (ExecutiveX::initExecutive(thread->executive->mainCmdN, thread->executive->mainCmdS, thread->executive->applicationInitExecutive)) {
+						if (ExecutiveX::executeString((char *)thread->sourceCode.value())) {
 							threadFunction = ExecutiveX::returnValue();
 
 							// CurrentThread.this_=thread;
 							Symbol currentThreadSymbol = Context::getSymbol("CurrentThread");
-							if(TIsTypeExact<VariableUndefined>((Context::getGlobalObject())->getPropertyBySymbol(currentThreadSymbol))) {
-								(Context::getGlobalObject())->setPropertyBySymbol(currentThreadSymbol,VariableObject::newVariable());
+							if (TIsTypeExact<VariableUndefined>((Context::getGlobalObject())->getPropertyBySymbol(currentThreadSymbol))) {
+								(Context::getGlobalObject())->setPropertyBySymbol(currentThreadSymbol, VariableObject::newVariable());
 							};
 
 							TPointer<Variable> currenThread = (Context::getGlobalObject())->getPropertyBySymbol(currentThreadSymbol);
@@ -99,20 +99,20 @@ namespace Quantum {
 
 							try {
 								functionThis = thread->functionThis->clone(*(thread->symbolList));
-							} catch(...) {
+							} catch (...) {
 								functionThis = Context::getValueUndefined();
 							};
 
 							try {
-								if(TIsType<VariableArray>(thread->functionArguments)) {
+								if (TIsType<VariableArray>(thread->functionArguments)) {
 									functionArguments = thread->functionArguments->clone(*(thread->symbolList));
-									if(!TIsType<VariableArray>(functionArguments)) {
+									if (!TIsType<VariableArray>(functionArguments)) {
 										functionArguments = VariableArray::newVariable();
 									};
 								} else {
 									functionArguments = VariableArray::newVariable();
 								};
-							} catch(...) {
+							} catch (...) {
 								functionArguments = VariableArray::newVariable();
 							};
 
@@ -122,11 +122,11 @@ namespace Quantum {
 							try {
 
 								thread->returnValue = threadFunction->functionApply(functionThis, (VariableArray *)functionArguments.value());
-								if(!thread->returnValue) {
+								if (!thread->returnValue) {
 									thread->returnValue = Context::getValueUndefined();
 								};
 
-							} catch(...) {
+							} catch (...) {
 								thread->returnValue = Context::getValueUndefined();
 							};
 
@@ -154,9 +154,9 @@ namespace Quantum {
 					threadEnded = false;
 					requestToTerminateThread = false;
 					symbolList = &Context::getSymbolList();
-					if(thread.start((ThreadProcedure)threadProcedure_, this)) {
+					if (thread.start((ThreadProcedure)threadProcedure_, this)) {
 						threadStarted.wait();
-						if(startedOk) {
+						if (startedOk) {
 							return true;
 						};
 						thread.join();
@@ -165,8 +165,8 @@ namespace Quantum {
 				};
 
 				void VariableThread::join() {
-					if(thread.isRunning()) {
-						if(!threadEnded) {
+					if (thread.isRunning()) {
+						if (!threadEnded) {
 							threadEnded = true;
 							threadTerminated.wait();
 							returnedValue = returnValue->clone(*functionSymbolList);
@@ -177,9 +177,9 @@ namespace Quantum {
 				};
 
 				bool VariableThread::isRunning() {
-					if(thread.isRunning()) {
-						if(!threadEnded) {
-							if(threadTerminated.peek()) {
+					if (thread.isRunning()) {
+						if (!threadEnded) {
+							if (threadTerminated.peek()) {
 								threadEnded = true;
 								threadTerminated.wait();
 								returnedValue = returnValue->clone(*functionSymbolList);
@@ -196,5 +196,3 @@ namespace Quantum {
 		};
 	};
 };
-
-

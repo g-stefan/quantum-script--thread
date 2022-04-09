@@ -11,7 +11,7 @@
 #define QUANTUM_SCRIPT_EXTENSION_THREAD_ATOMIC_HPP
 
 #ifndef QUANTUM_SCRIPT_VARIABLE_HPP
-#include "quantum-script-variable.hpp"
+#	include "quantum-script-variable.hpp"
 #endif
 
 namespace Quantum {
@@ -23,13 +23,12 @@ namespace Quantum {
 
 				class Atomic {
 					public:
-
 						CriticalSection criticalSection;
 
-						static const int  typeUnknown = 0;
-						static const int  typeBoolean = 1;
-						static const int  typeNumber = 2;
-						static const int  typeString = 3;
+						static const int typeUnknown = 0;
+						static const int typeBoolean = 1;
+						static const int typeNumber = 2;
+						static const int typeString = 3;
 
 						int atomicType;
 						bool valueBooloean;
@@ -46,7 +45,7 @@ namespace Quantum {
 						};
 
 						inline ~Atomic() {
-							if(atomicType == typeString) {
+							if (atomicType == typeString) {
 								delete[] valueString;
 							};
 						};
@@ -54,7 +53,7 @@ namespace Quantum {
 						inline void decReferenceCount() {
 							criticalSection.enter();
 							--referenceCount;
-							if(referenceCount == 0) {
+							if (referenceCount == 0) {
 								criticalSection.leave();
 								delete this;
 								return;
@@ -71,7 +70,7 @@ namespace Quantum {
 						inline void clear() {
 							criticalSection.enter();
 
-							if(atomicType == typeString) {
+							if (atomicType == typeString) {
 								delete[] valueString;
 							};
 							atomicType = typeUnknown;
@@ -80,7 +79,7 @@ namespace Quantum {
 
 						inline void setBoolean(bool value) {
 							criticalSection.enter();
-							if(atomicType == typeString) {
+							if (atomicType == typeString) {
 								delete[] valueString;
 							};
 
@@ -91,7 +90,7 @@ namespace Quantum {
 
 						inline void setNumber(Number value) {
 							criticalSection.enter();
-							if(atomicType == typeString) {
+							if (atomicType == typeString) {
 								delete[] valueString;
 							};
 
@@ -102,7 +101,7 @@ namespace Quantum {
 
 						inline void setString(String value) {
 							criticalSection.enter();
-							if(atomicType == typeString) {
+							if (atomicType == typeString) {
 								delete[] valueString;
 							};
 
@@ -111,10 +110,7 @@ namespace Quantum {
 							memcpy(valueString, value.value(), value.length() + 1);
 							criticalSection.leave();
 						};
-
-
 				};
-
 
 			};
 		};

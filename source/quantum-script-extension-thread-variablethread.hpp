@@ -11,7 +11,7 @@
 #define QUANTUM_SCRIPT_VARIABLETHREAD_HPP
 
 #ifndef QUANTUM_SCRIPT_VARIABLE_HPP
-#include "quantum-script-variable.hpp"
+#	include "quantum-script-variable.hpp"
 #endif
 
 namespace Quantum {
@@ -27,15 +27,12 @@ namespace Quantum {
 	};
 };
 
-
 namespace XYO {
 	namespace ManagedMemory {
-		template<>
-		class TMemory<Quantum::Script::Extension::Thread::VariableThread>:
-			public TMemoryPoolActive<Quantum::Script::Extension::Thread::VariableThread> {};
+		template <>
+		class TMemory<Quantum::Script::Extension::Thread::VariableThread> : public TMemoryPoolActive<Quantum::Script::Extension::Thread::VariableThread> {};
 	};
 };
-
 
 namespace Quantum {
 	namespace Script {
@@ -44,14 +41,14 @@ namespace Quantum {
 
 				using namespace XYO;
 
-				class VariableThread :
-					public Variable {
+				class VariableThread : public Variable {
 						XYO_DISALLOW_COPY_ASSIGN_MOVE(VariableThread);
 						XYO_DYNAMIC_TYPE_DEFINE(QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT, VariableThread);
+
 					protected:
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT static const char *strTypeThread;
-					public:
 
+					public:
 						XYO::Thread thread;
 						bool requestToTerminateThread;
 						TPointer<Variable> returnValue;
@@ -93,7 +90,6 @@ namespace Quantum {
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT bool start(Executive *executive_, String sourceCode_, Variable *functionThis_, Variable *functionArguments_);
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT void join();
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT bool isRunning();
-
 				};
 
 			};
@@ -101,6 +97,4 @@ namespace Quantum {
 	};
 };
 
-
 #endif
-

@@ -11,11 +11,11 @@
 #define QUANTUM_SCRIPT_VARIABLEATOMIC_HPP
 
 #ifndef QUANTUM_SCRIPT_VARIABLE_HPP
-#include "quantum-script-variable.hpp"
+#	include "quantum-script-variable.hpp"
 #endif
 
 #ifndef QUANTUM_SCRIPT_EXTENSION_THREAD_ATOMIC_HPP
-#include "quantum-script-extension-thread-atomic.hpp"
+#	include "quantum-script-extension-thread-atomic.hpp"
 #endif
 
 namespace Quantum {
@@ -30,15 +30,12 @@ namespace Quantum {
 	};
 };
 
-
 namespace XYO {
 	namespace ManagedMemory {
-		template<>
-		class TMemory<Quantum::Script::Extension::Thread::VariableAtomic>:
-			public TMemoryPoolActive<Quantum::Script::Extension::Thread::VariableAtomic> {};
+		template <>
+		class TMemory<Quantum::Script::Extension::Thread::VariableAtomic> : public TMemoryPoolActive<Quantum::Script::Extension::Thread::VariableAtomic> {};
 	};
 };
-
 
 namespace Quantum {
 	namespace Script {
@@ -47,14 +44,14 @@ namespace Quantum {
 
 				using namespace XYO;
 
-				class VariableAtomic :
-					public Variable {
+				class VariableAtomic : public Variable {
 						XYO_DISALLOW_COPY_ASSIGN_MOVE(VariableAtomic);
 						XYO_DYNAMIC_TYPE_DEFINE(QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT, VariableAtomic);
+
 					protected:
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT static const char *strTypeAtomic;
-					public:
 
+					public:
 						Atomic *value;
 
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT VariableAtomic();
@@ -74,12 +71,9 @@ namespace Quantum {
 						QUANTUM_SCRIPT_EXTENSION_THREAD_EXPORT String toString();
 				};
 
-
 			};
 		};
 	};
 };
 
-
 #endif
-
