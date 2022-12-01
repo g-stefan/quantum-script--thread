@@ -1,0 +1,16 @@
+{
+	"project": {
+		"name":"quantum-script--thread",
+		"type":"xyo-cpp-project",
+		"make" : "lib-and-dll",
+		"SPDX-License-Identifier": "MIT",
+		"sourcePath" : "XYO/QuantumScript.Extension/Thread",
+		"testSource" : [
+			"test.01"
+		],
+		"dependency" : [
+			"quantum-script",
+			"quantum-script--console"
+		]
+	}
+}

@@ -1,0 +1,11 @@
+// Quantum Script Extension Thread
+// Copyright (c) 2022 Grigore Stefan <g_stefan@yahoo.com>
+// MIT License (MIT) <http://opensource.org/licenses/MIT>
+// SPDX-FileCopyrightText: 2022 Grigore Stefan <g_stefan@yahoo.com>
+// SPDX-License-Identifier: MIT
+
+#include <XYO/QuantumScript.Extension/Thread/Library.rh>
+#include <XYO/QuantumScript.Extension/Thread/Copyright.rh>
+#include <XYO/QuantumScript.Extension/Thread/Version.rh>
+
+XYO_APPLICATION_VERSION_INFO(XYO_QUANTUMSCRIPT_EXTENSION_THREAD,"quantum-script--thread.dll","Quantum Script Extension Thread")

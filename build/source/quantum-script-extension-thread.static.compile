@@ -1,6 +1,0 @@
---lib qse-thread
---project-base=quantum-script-extension-thread
---build-include
---use-project=quantum-script.static
---install-dev
---install-inc=quantum-script-extension
