@@ -16,46 +16,45 @@
 
 namespace XYO::QuantumScript::Extension::Thread {
 
-				class VariableAtomic;
+	class VariableAtomic;
 
-			};
-		
+};
+
 namespace XYO::ManagedMemory {
-		template <>
-		class TMemory<XYO::QuantumScript::Extension::Thread::VariableAtomic> : public TMemoryPoolActive<XYO::QuantumScript::Extension::Thread::VariableAtomic> {};
+	template <>
+	class TMemory<XYO::QuantumScript::Extension::Thread::VariableAtomic> : public TMemoryPoolActive<XYO::QuantumScript::Extension::Thread::VariableAtomic> {};
 
 };
 
 namespace XYO::QuantumScript::Extension::Thread {
 
-				class VariableAtomic : public Variable {
-						XYO_DISALLOW_COPY_ASSIGN_MOVE(VariableAtomic);
-						XYO_DYNAMIC_TYPE_DEFINE(XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT, VariableAtomic);
+	class VariableAtomic : public Variable {
+			XYO_DISALLOW_COPY_ASSIGN_MOVE(VariableAtomic);
+			XYO_DYNAMIC_TYPE_DEFINE(XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT, VariableAtomic);
 
-					protected:
-						XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT static const char *strTypeAtomic;
+		protected:
+			XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT static const char *strTypeAtomic;
 
-					public:
-						Atomic *value;
+		public:
+			Atomic *value;
 
-						XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT VariableAtomic();
-						XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT ~VariableAtomic();
+			XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT VariableAtomic();
+			XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT ~VariableAtomic();
 
-						XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT void activeDestructor();
+			XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT void activeDestructor();
 
-						XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT static Variable *newVariable();
+			XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT static Variable *newVariable();
 
-						XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT String getVariableType();
+			XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT String getVariableType();
 
-						XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT Variable *instancePrototype();
+			XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT Variable *instancePrototype();
 
-						XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT Variable *clone(SymbolList &inSymbolList);
+			XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT Variable *clone(SymbolList &inSymbolList);
 
-						XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT bool toBoolean();
-						XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT String toString();
-				};
+			XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT bool toBoolean();
+			XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT String toString();
+	};
 
-			};
+};
 
 #endif
-

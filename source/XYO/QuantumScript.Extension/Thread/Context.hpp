@@ -13,19 +13,19 @@
 
 namespace XYO::QuantumScript::Extension::Thread {
 
-				class ThreadContext : public Object {
-						XYO_DISALLOW_COPY_ASSIGN_MOVE(ThreadContext);
+	class ThreadContext : public Object {
+			XYO_DISALLOW_COPY_ASSIGN_MOVE(ThreadContext);
 
-					public:
-						Symbol symbolFunctionThread;
-						Symbol symbolFunctionAtomic;
-						TPointerX<Prototype> prototypeThread;
-						TPointerX<Prototype> prototypeAtomic;
+		public:
+			Symbol symbolFunctionThread;
+			Symbol symbolFunctionAtomic;
+			TPointerX<Prototype> prototypeThread;
+			TPointerX<Prototype> prototypeAtomic;
 
-						XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT ThreadContext();
-				};
+			XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT ThreadContext();
+	};
 
-				XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT ThreadContext *getContext();
+	XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT ThreadContext *getContext();
 };
 
 #endif

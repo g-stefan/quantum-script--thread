@@ -16,97 +16,97 @@
 
 namespace XYO::QuantumScript::Extension::Thread {
 
-				class Atomic {
-					public:
-						CriticalSection criticalSection;
+	class Atomic {
+		public:
+			CriticalSection criticalSection;
 
-						static const int typeUnknown = 0;
-						static const int typeBoolean = 1;
-						static const int typeNumber = 2;
-						static const int typeString = 3;
+			static const int typeUnknown = 0;
+			static const int typeBoolean = 1;
+			static const int typeNumber = 2;
+			static const int typeString = 3;
 
-						int atomicType;
-						bool valueBooloean;
-						Number valueNumber;
-						char *valueString;
-						int referenceCount;
+			int atomicType;
+			bool valueBooloean;
+			Number valueNumber;
+			char *valueString;
+			int referenceCount;
 
-						inline Atomic() {
-							atomicType = typeUnknown;
-							valueBooloean = false;
-							valueNumber = 0;
-							valueString = nullptr;
-							referenceCount = 0;
-						};
+			inline Atomic() {
+				atomicType = typeUnknown;
+				valueBooloean = false;
+				valueNumber = 0;
+				valueString = nullptr;
+				referenceCount = 0;
+			};
 
-						inline ~Atomic() {
-							if (atomicType == typeString) {
-								delete[] valueString;
-							};
-						};
+			inline ~Atomic() {
+				if (atomicType == typeString) {
+					delete[] valueString;
+				};
+			};
 
-						inline void decReferenceCount() {
-							criticalSection.enter();
-							--referenceCount;
-							if (referenceCount == 0) {
-								criticalSection.leave();
-								delete this;
-								return;
-							};
-							criticalSection.leave();
-						};
+			inline void decReferenceCount() {
+				criticalSection.enter();
+				--referenceCount;
+				if (referenceCount == 0) {
+					criticalSection.leave();
+					delete this;
+					return;
+				};
+				criticalSection.leave();
+			};
 
-						inline void incReferenceCount() {
-							criticalSection.enter();
-							++referenceCount;
-							criticalSection.leave();
-						};
+			inline void incReferenceCount() {
+				criticalSection.enter();
+				++referenceCount;
+				criticalSection.leave();
+			};
 
-						inline void clear() {
-							criticalSection.enter();
+			inline void clear() {
+				criticalSection.enter();
 
-							if (atomicType == typeString) {
-								delete[] valueString;
-							};
-							atomicType = typeUnknown;
-							criticalSection.leave();
-						};
+				if (atomicType == typeString) {
+					delete[] valueString;
+				};
+				atomicType = typeUnknown;
+				criticalSection.leave();
+			};
 
-						inline void setBoolean(bool value) {
-							criticalSection.enter();
-							if (atomicType == typeString) {
-								delete[] valueString;
-							};
-
-							atomicType = typeBoolean;
-							valueBooloean = value;
-							criticalSection.leave();
-						};
-
-						inline void setNumber(Number value) {
-							criticalSection.enter();
-							if (atomicType == typeString) {
-								delete[] valueString;
-							};
-
-							atomicType = typeNumber;
-							valueNumber = value;
-							criticalSection.leave();
-						};
-
-						inline void setString(String value) {
-							criticalSection.enter();
-							if (atomicType == typeString) {
-								delete[] valueString;
-							};
-
-							atomicType = typeString;
-							valueString = new char[value.length() + 1];
-							memcpy(valueString, value.value(), value.length() + 1);
-							criticalSection.leave();
-						};
+			inline void setBoolean(bool value) {
+				criticalSection.enter();
+				if (atomicType == typeString) {
+					delete[] valueString;
 				};
 
+				atomicType = typeBoolean;
+				valueBooloean = value;
+				criticalSection.leave();
 			};
+
+			inline void setNumber(Number value) {
+				criticalSection.enter();
+				if (atomicType == typeString) {
+					delete[] valueString;
+				};
+
+				atomicType = typeNumber;
+				valueNumber = value;
+				criticalSection.leave();
+			};
+
+			inline void setString(String value) {
+				criticalSection.enter();
+				if (atomicType == typeString) {
+					delete[] valueString;
+				};
+
+				atomicType = typeString;
+				valueString = new char[value.length() + 1];
+				memcpy(valueString, value.value(), value.length() + 1);
+				criticalSection.leave();
+			};
+	};
+
+};
 
 #endif
