@@ -12,6 +12,7 @@ namespace XYO::QuantumScript::Extension::Thread::Copyright {
 	static const char *copyright_ = XYO_QUANTUMSCRIPT_EXTENSION_THREAD_COPYRIGHT;
 	static const char *publisher_ = XYO_QUANTUMSCRIPT_EXTENSION_THREAD_PUBLISHER;
 	static const char *company_ = XYO_QUANTUMSCRIPT_EXTENSION_THREAD_COMPANY;
+	static const char *contact_ = XYO_QUANTUMSCRIPT_EXTENSION_THREAD_CONTACT;
 
 	const char *copyright() {
 		return copyright_;
