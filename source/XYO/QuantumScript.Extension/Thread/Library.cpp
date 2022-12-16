@@ -68,14 +68,14 @@ namespace XYO::QuantumScript::Extension::Thread {
 	};
 
 	static TPointer<Variable> isThread(VariableFunction *function, Variable *this_, VariableArray *arguments) {
-#ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
+#ifdef XYO_QUANTUMSCRIPT_DEBUG_RUNTIME
 		printf("- script-is-thread\n");
 #endif
 		return VariableBoolean::newVariable(TIsType<VariableThread>(arguments->index(0)));
 	};
 
 	static TPointer<Variable> isAtomic(VariableFunction *function, Variable *this_, VariableArray *arguments) {
-#ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
+#ifdef XYO_QUANTUMSCRIPT_DEBUG_RUNTIME
 		printf("- script-is-atomic\n");
 #endif
 		return VariableBoolean::newVariable(TIsType<VariableAtomic>(arguments->index(0)));
@@ -91,7 +91,7 @@ namespace XYO::QuantumScript::Extension::Thread {
 	};
 
 	static TPointer<Variable> threadStart(VariableFunction *function, Variable *this_, VariableArray *arguments) {
-#ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
+#ifdef XYO_QUANTUMSCRIPT_DEBUG_RUNTIME
 		printf("- thread-start\n");
 #endif
 		if (TIsType<VariableThread>(this_)) {
@@ -106,7 +106,7 @@ namespace XYO::QuantumScript::Extension::Thread {
 	};
 
 	static TPointer<Variable> threadStartFromFile(VariableFunction *function, Variable *this_, VariableArray *arguments) {
-#ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
+#ifdef XYO_QUANTUMSCRIPT_DEBUG_RUNTIME
 		printf("- thread-start-from-file\n");
 #endif
 		if (TIsType<VariableThread>(this_)) {
@@ -125,7 +125,7 @@ namespace XYO::QuantumScript::Extension::Thread {
 	};
 
 	static TPointer<Variable> threadStartFromString(VariableFunction *function, Variable *this_, VariableArray *arguments) {
-#ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
+#ifdef XYO_QUANTUMSCRIPT_DEBUG_RUNTIME
 		printf("- thread-start-from-string\n");
 #endif
 		if (TIsType<VariableThread>(this_)) {
@@ -140,7 +140,7 @@ namespace XYO::QuantumScript::Extension::Thread {
 	};
 
 	static TPointer<Variable> threadGetReturnedValue(VariableFunction *function, Variable *this_, VariableArray *arguments) {
-#ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
+#ifdef XYO_QUANTUMSCRIPT_DEBUG_RUNTIME
 		printf("- thread-get-returned-value\n");
 #endif
 		if (TIsType<VariableThread>(this_)) {
@@ -150,7 +150,7 @@ namespace XYO::QuantumScript::Extension::Thread {
 	};
 
 	static TPointer<Variable> threadIsRunning(VariableFunction *function, Variable *this_, VariableArray *arguments) {
-#ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
+#ifdef XYO_QUANTUMSCRIPT_DEBUG_RUNTIME
 		printf("- thread-is-running\n");
 #endif
 		if (TIsType<VariableThread>(this_)) {
@@ -160,7 +160,7 @@ namespace XYO::QuantumScript::Extension::Thread {
 	};
 
 	static TPointer<Variable> threadIsTerminated(VariableFunction *function, Variable *this_, VariableArray *arguments) {
-#ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
+#ifdef XYO_QUANTUMSCRIPT_DEBUG_RUNTIME
 		printf("- thread-is-terminated\n");
 #endif
 		if (TIsType<VariableThread>(this_)) {
@@ -170,7 +170,7 @@ namespace XYO::QuantumScript::Extension::Thread {
 	};
 
 	static TPointer<Variable> currentThreadIsRequestToTerminate(VariableFunction *function, Variable *this_, VariableArray *arguments) {
-#ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
+#ifdef XYO_QUANTUMSCRIPT_DEBUG_RUNTIME
 		printf("- current-thread-is-request-to-terminate\n");
 #endif
 		if (TIsType<VariableObject>(this_)) {
@@ -183,7 +183,7 @@ namespace XYO::QuantumScript::Extension::Thread {
 	};
 
 	static TPointer<Variable> threadJoin(VariableFunction *function, Variable *this_, VariableArray *arguments) {
-#ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
+#ifdef XYO_QUANTUMSCRIPT_DEBUG_RUNTIME
 		printf("- thread-join\n");
 #endif
 		if (TIsType<VariableThread>(this_)) {
@@ -193,7 +193,7 @@ namespace XYO::QuantumScript::Extension::Thread {
 	};
 
 	static TPointer<Variable> threadRequestToTerminate(VariableFunction *function, Variable *this_, VariableArray *arguments) {
-#ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
+#ifdef XYO_QUANTUMSCRIPT_DEBUG_RUNTIME
 		printf("- thread-request-to-terminate\n");
 #endif
 		if (TIsType<VariableThread>(this_)) {
@@ -203,7 +203,7 @@ namespace XYO::QuantumScript::Extension::Thread {
 	};
 
 	static TPointer<Variable> atomicGetValue(VariableFunction *function, Variable *this_, VariableArray *arguments) {
-#ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
+#ifdef XYO_QUANTUMSCRIPT_DEBUG_RUNTIME
 		printf("- atomic-get\n");
 #endif
 
@@ -227,7 +227,7 @@ namespace XYO::QuantumScript::Extension::Thread {
 	};
 
 	static TPointer<Variable> atomicSetValue(VariableFunction *function, Variable *this_, VariableArray *arguments) {
-#ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
+#ifdef XYO_QUANTUMSCRIPT_DEBUG_RUNTIME
 		printf("- atomic-set\n");
 #endif
 
@@ -268,7 +268,7 @@ namespace XYO::QuantumScript::Extension::Thread {
 	};
 
 	static TPointer<Variable> processorGetCount(VariableFunction *function, Variable *this_, VariableArray *arguments) {
-#ifdef QUANTUM_SCRIPT_DEBUG_RUNTIME
+#ifdef XYO_QUANTUMSCRIPT_DEBUG_RUNTIME
 		printf("- processor-get-count\n");
 #endif
 		return VariableNumber::newVariable(Processor::getCount());
