@@ -11,6 +11,8 @@
 		"dependency" : [
 			"quantum-script",
 			"quantum-script--console"
-		]
+		],
+		"hasRelease" : true,
+		"githubRelease" : true
 	}
 }
