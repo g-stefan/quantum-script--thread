@@ -6,6 +6,6 @@
 Script.requireExtension("Console");
 Script.requireExtension("Thread");
 
-var thread1=Thread.newThreadFromFile("test/test.01.thread.js");
+var thread1=Thread.newThreadFromFile("../../test/test.01.thread.js");
 thread1.join();
 Console.writeLn(thread1.getReturnedValue());

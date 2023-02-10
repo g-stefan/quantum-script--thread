@@ -9,17 +9,17 @@ Script.requireExtension("Thread");
 var thread1=Thread.newThread(function() {
 
 	if(
-		(.a==1)&&
-		(.b==2)&&
-		(.c==3)&&
+		(this.a==1)&&
+		(this.b==2)&&
+		(this.c==3)&&
 		(arguments[0]==101)&&
 		(arguments[1]==102)&&
 		(arguments[2]==103)
 	) {
-		return "> test 02 ok <";
+		return "-> test 02 ok";
 	};
 
-	return "> test 02 fail <";
+	return "-> test 02 fail";
 
 }, {a:1, b:2, c:3}, [101, 102, 103]);
 
