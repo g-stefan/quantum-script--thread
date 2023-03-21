@@ -13,8 +13,8 @@
 
 namespace XYO::QuantumScript::Extension::Thread::License {
 
-	XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT const char *license();
-	XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT const char *shortLicense();
+	XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT std::string license();
+	XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT std::string shortLicense();
 
 };
 

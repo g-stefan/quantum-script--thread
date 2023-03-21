@@ -281,7 +281,7 @@ namespace XYO::QuantumScript::Extension::Thread {
 	void initExecutive(Executive *executive, void *extensionId) {
 
 		String info = "Thread\r\n";
-		info << License::shortLicense();
+		info << License::shortLicense().c_str();
 
 		executive->setExtensionName(extensionId, "Thread");
 		executive->setExtensionInfo(extensionId, info);
