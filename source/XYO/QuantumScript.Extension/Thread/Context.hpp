@@ -14,7 +14,7 @@
 namespace XYO::QuantumScript::Extension::Thread {
 
 	class ThreadContext : public Object {
-			XYO_DISALLOW_COPY_ASSIGN_MOVE(ThreadContext);
+			XYO_PLATFORM_DISALLOW_COPY_ASSIGN_MOVE(ThreadContext);
 
 		public:
 			Symbol symbolFunctionThread;

@@ -29,7 +29,7 @@ namespace XYO::ManagedMemory {
 namespace XYO::QuantumScript::Extension::Thread {
 
 	class VariableAtomic : public Variable {
-			XYO_DISALLOW_COPY_ASSIGN_MOVE(VariableAtomic);
+			XYO_PLATFORM_DISALLOW_COPY_ASSIGN_MOVE(VariableAtomic);
 			XYO_DYNAMIC_TYPE_DEFINE(XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT, VariableAtomic);
 
 		protected:

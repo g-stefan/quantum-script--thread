@@ -30,7 +30,7 @@ namespace XYO::QuantumScript::Extension::Thread {
 	using namespace XYO;
 
 	class VariableThread : public Variable {
-			XYO_DISALLOW_COPY_ASSIGN_MOVE(VariableThread);
+			XYO_PLATFORM_DISALLOW_COPY_ASSIGN_MOVE(VariableThread);
 			XYO_DYNAMIC_TYPE_DEFINE(XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT, VariableThread);
 
 		protected:
