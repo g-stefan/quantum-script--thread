@@ -318,8 +318,10 @@ namespace XYO::QuantumScript::Extension::Thread {
 
 };
 
-#ifdef XYO_PLATFORM_COMPILE_DYNAMIC_LIBRARY
+#ifndef XYO_QUANTUMSCRIPT_EXTENSION_THREAD_LIBRARY
+#	ifdef XYO_PLATFORM_COMPILE_DYNAMIC_LIBRARY
 extern "C" XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT void quantumScriptExtension(XYO::QuantumScript::Executive *executive, void *extensionId) {
 	XYO::QuantumScript::Extension::Thread::initExecutive(executive, extensionId);
 };
+#	endif
 #endif
