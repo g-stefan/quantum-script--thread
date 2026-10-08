@@ -13,10 +13,12 @@
 #include <XYO/QuantumScript.Extension/Thread/VariableThread.hpp>
 #include <XYO/QuantumScript.Extension/Thread/Context.hpp>
 #include <XYO/QuantumScript.Extension/Thread/Library.Source.cpp>
+#include <XYO/QuantumScript/VariableVmFunction.hpp>
 
 namespace XYO::QuantumScript::Extension::Thread {
 
 	ThreadContext::ThreadContext() {
+		currentThread = nullptr;
 		symbolFunctionThread = 0;
 		prototypeThread.pointerLink(this);
 		symbolFunctionAtomic = 0;
@@ -82,7 +84,7 @@ namespace XYO::QuantumScript::Extension::Thread {
 	};
 
 	static TPointer<Variable> currentThreadSleep(VariableFunction *function, Variable *this_, VariableArray *arguments) {
-#ifdef QUANTUM_SCRIPT_VM_DEBUG_RUNTIME
+#ifdef XYO_QUANTUMSCRIPT_DEBUG_RUNTIME
 		printf("- current-thread-sleep\n");
 #endif
 
@@ -95,6 +97,22 @@ namespace XYO::QuantumScript::Extension::Thread {
 		printf("- thread-start\n");
 #endif
 		if (TIsType<VariableThread>(this_)) {
+
+			// without source (stripped or protected), the code of the function is moved as bytecode
+			TPointerX<Variable> &threadFunction = arguments->index(0);
+			if (TIsType<VariableVmFunction>(threadFunction)) {
+				if (((VariableVmFunction *)threadFunction.value())->fnSource == 0) {
+					CodeUnit unit;
+					Buffer bytecode;
+					String error;
+					if (!Linker::unlinkFunction(threadFunction, unit, error) || !Bytecode::save(unit, bytecode, error)) {
+						String message("Thread start: ");
+						message << error;
+						throw Error(message);
+					};
+					return VariableBoolean::newVariable(((VariableThread *)this_)->startBytecode(&ExecutiveX::getExecutive(), bytecode, ((VariableVmFunction *)threadFunction.value())->functionHint, arguments->index(1), arguments->index(2)));
+				};
+			};
 
 			String sourceCode = "return ";
 			sourceCode += (arguments->index(0))->toString();
@@ -111,11 +129,21 @@ namespace XYO::QuantumScript::Extension::Thread {
 #endif
 		if (TIsType<VariableThread>(this_)) {
 
+			String fileName = (arguments->index(0))->toString();
+			if (Bytecode::isBytecodeFile(fileName)) {
+				Buffer bytecode;
+				if (Shell::fileGetContents(fileName, bytecode)) {
+					return VariableBoolean::newVariable(((VariableThread *)this_)->startBytecode(&ExecutiveX::getExecutive(), bytecode, ParserFunctionHint::All, arguments->index(1), arguments->index(2)));
+				};
+				return VariableBoolean::newVariable(false);
+			};
+
 			String sourceCode = "return function(){";
 			String fileCode;
-			if (Shell::fileGetContents((arguments->index(0))->toString(), fileCode)) {
+			if (Shell::fileGetContents(fileName, fileCode)) {
 				sourceCode += fileCode;
-				sourceCode += "};";
+				// new line, the code can end with a // comment
+				sourceCode += "\n};";
 
 				return VariableBoolean::newVariable(((VariableThread *)this_)->start(&ExecutiveX::getExecutive(), sourceCode, arguments->index(1), arguments->index(2)));
 			};
@@ -132,7 +160,8 @@ namespace XYO::QuantumScript::Extension::Thread {
 
 			String sourceCode = "return function(){";
 			sourceCode += (arguments->index(0))->toString();
-			sourceCode += "};";
+			// new line, the code can end with a // comment
+			sourceCode += "\n};";
 
 			return VariableBoolean::newVariable(((VariableThread *)this_)->start(&ExecutiveX::getExecutive(), sourceCode, arguments->index(1), arguments->index(2)));
 		};
@@ -173,11 +202,9 @@ namespace XYO::QuantumScript::Extension::Thread {
 #ifdef XYO_QUANTUMSCRIPT_DEBUG_RUNTIME
 		printf("- current-thread-is-request-to-terminate\n");
 #endif
-		if (TIsType<VariableObject>(this_)) {
-			TPointer<Variable> thisThread_ = this_->getPropertyBySymbol(Context::getSymbol("this_"));
-			if (TIsType<VariableResource>(thisThread_)) {
-				return VariableBoolean::newVariable(((VariableThread *)(((VariableResource *)(thisThread_.value()))->resource))->requestToTerminateThread);
-			};
+		VariableThread *currentThread = (getContext())->currentThread;
+		if (currentThread) {
+			return VariableBoolean::newVariable(currentThread->requestToTerminateThread.get());
 		};
 		return Context::getValueUndefined();
 	};
@@ -197,7 +224,7 @@ namespace XYO::QuantumScript::Extension::Thread {
 		printf("- thread-request-to-terminate\n");
 #endif
 		if (TIsType<VariableThread>(this_)) {
-			((VariableThread *)this_)->requestToTerminateThread = true;
+			((VariableThread *)this_)->requestToTerminateThread.set(true);
 		};
 		return Context::getValueUndefined();
 	};
@@ -211,16 +238,19 @@ namespace XYO::QuantumScript::Extension::Thread {
 			throw(Error("invalid parameter"));
 		};
 
-		if (((VariableAtomic *)(this_))->value->atomicType == Atomic::typeBoolean) {
-			return VariableBoolean::newVariable(((VariableAtomic *)(this_))->value->valueBooloean);
-		};
-
-		if (((VariableAtomic *)(this_))->value->atomicType == Atomic::typeNumber) {
-			return VariableNumber::newVariable(((VariableAtomic *)(this_))->value->valueNumber);
-		};
-
-		if (((VariableAtomic *)(this_))->value->atomicType == Atomic::typeString) {
-			return VariableString::newVariable(((VariableAtomic *)(this_))->value->valueString);
+		// copy of the value, another thread can change it
+		bool valueBoolean = false;
+		Number valueNumber = 0;
+		String valueString;
+		switch (((VariableAtomic *)(this_))->value->get(valueBoolean, valueNumber, valueString)) {
+		case Atomic::typeBoolean:
+			return VariableBoolean::newVariable(valueBoolean);
+		case Atomic::typeNumber:
+			return VariableNumber::newVariable(valueNumber);
+		case Atomic::typeString:
+			return VariableString::newVariable(valueString);
+		default:
+			break;
 		};
 
 		return VariableNull::newVariable();
@@ -235,34 +265,35 @@ namespace XYO::QuantumScript::Extension::Thread {
 			throw(Error("invalid parameter"));
 		};
 
+		Atomic *atomic = ((VariableAtomic *)(this_))->value;
 		TPointerX<Variable> &value = arguments->index(0);
 
 		if (TIsType<VariableBoolean>(value)) {
-			((VariableAtomic *)(this_))->value->setBoolean(value->toBoolean());
+			atomic->setBoolean(value->toBoolean());
 			return Context::getValueUndefined();
 		};
 
 		if (TIsType<VariableNumber>(value)) {
-			((VariableAtomic *)(this_))->value->setNumber(value->toNumber());
+			atomic->setNumber(value->toNumber());
 			return Context::getValueUndefined();
 		};
 
 		if (TIsType<VariableString>(value)) {
-			((VariableAtomic *)(this_))->value->setString(value->toString());
+			atomic->setString(value->toString());
 			return Context::getValueUndefined();
 		};
 
 		if (TIsType<VariableNull>(value)) {
-			((VariableAtomic *)(this_))->value->clear();
+			atomic->clear();
 			return Context::getValueUndefined();
 		};
 
 		if (TIsTypeExact<VariableUndefined>(value)) {
-			((VariableAtomic *)(this_))->value->clear();
+			atomic->clear();
 			return Context::getValueUndefined();
 		};
 
-		((VariableAtomic *)(this_))->value->setString(value->toString());
+		atomic->setString(value->toString());
 
 		return Context::getValueUndefined();
 	};

@@ -1,4 +1,4 @@
-// Quantum Script Extension ProcessInteractive
+// Quantum Script Extension Thread
 // Copyright (c) 2016-2026 Grigore Stefan <g_stefan@yahoo.com>
 // MIT License (MIT) <http://opensource.org/licenses/MIT>
 // SPDX-FileCopyrightText: 2016-2026 Grigore Stefan <g_stefan@yahoo.com>
@@ -13,6 +13,8 @@
 
 namespace XYO::QuantumScript::Extension::Thread {
 
+	class VariableThread;
+
 	class ThreadContext : public Object {
 			XYO_PLATFORM_DISALLOW_COPY_ASSIGN_MOVE(ThreadContext);
 
@@ -21,6 +23,8 @@ namespace XYO::QuantumScript::Extension::Thread {
 			Symbol symbolFunctionAtomic;
 			TPointerX<Prototype> prototypeThread;
 			TPointerX<Prototype> prototypeAtomic;
+			// the Thread object running the current system thread, nullptr in the main thread
+			VariableThread *currentThread;
 
 			XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT ThreadContext();
 	};

@@ -14,8 +14,15 @@
 #	include <XYO/QuantumScript.Extension/Thread/Dependency.hpp>
 #endif
 
+#ifndef XYO_MULTITHREADING_CRITICALSECTIONLOCK_HPP
+#	include <XYO/Multithreading/CriticalSectionLock.hpp>
+#endif
+
 namespace XYO::QuantumScript::Extension::Thread {
 
+	// Value shared between threads, all access to the value is done with
+	// criticalSection entered. valueString is nullptr if the type is not string.
+	// Memory is allocated and freed outside of criticalSection.
 	class Atomic {
 		public:
 			CriticalSection criticalSection;
@@ -26,84 +33,99 @@ namespace XYO::QuantumScript::Extension::Thread {
 			static const int typeString = 3;
 
 			int atomicType;
-			bool valueBooloean;
+			bool valueBoolean;
 			Number valueNumber;
 			char *valueString;
-			int referenceCount;
+			TAtomic<int> referenceCount;
 
 			inline Atomic() {
 				atomicType = typeUnknown;
-				valueBooloean = false;
+				valueBoolean = false;
 				valueNumber = 0;
 				valueString = nullptr;
-				referenceCount = 0;
+				referenceCount.set(0);
 			};
 
 			inline ~Atomic() {
-				if (atomicType == typeString) {
-					delete[] valueString;
-				};
+				delete[] valueString;
 			};
 
 			inline void decReferenceCount() {
-				criticalSection.enter();
-				--referenceCount;
-				if (referenceCount == 0) {
-					criticalSection.leave();
+				if (referenceCount.fetchSub(1) == 1) {
 					delete this;
-					return;
 				};
-				criticalSection.leave();
 			};
 
 			inline void incReferenceCount() {
-				criticalSection.enter();
-				++referenceCount;
-				criticalSection.leave();
+				referenceCount.fetchAdd(1);
+			};
+
+			// Copy of the value, returns the type
+			inline int get(bool &valueBoolean_, Number &valueNumber_, String &valueString_) {
+				CriticalSectionLock lock(criticalSection);
+				switch (atomicType) {
+				case typeBoolean:
+					valueBoolean_ = valueBoolean;
+					break;
+				case typeNumber:
+					valueNumber_ = valueNumber;
+					break;
+				case typeString:
+					valueString_ = valueString;
+					break;
+				default:
+					break;
+				};
+				return atomicType;
 			};
 
 			inline void clear() {
-				criticalSection.enter();
-
-				if (atomicType == typeString) {
-					delete[] valueString;
+				char *oldString;
+				{
+					CriticalSectionLock lock(criticalSection);
+					oldString = valueString;
+					valueString = nullptr;
+					atomicType = typeUnknown;
 				};
-				atomicType = typeUnknown;
-				criticalSection.leave();
+				delete[] oldString;
 			};
 
 			inline void setBoolean(bool value) {
-				criticalSection.enter();
-				if (atomicType == typeString) {
-					delete[] valueString;
+				char *oldString;
+				{
+					CriticalSectionLock lock(criticalSection);
+					oldString = valueString;
+					valueString = nullptr;
+					atomicType = typeBoolean;
+					valueBoolean = value;
 				};
-
-				atomicType = typeBoolean;
-				valueBooloean = value;
-				criticalSection.leave();
+				delete[] oldString;
 			};
 
 			inline void setNumber(Number value) {
-				criticalSection.enter();
-				if (atomicType == typeString) {
-					delete[] valueString;
+				char *oldString;
+				{
+					CriticalSectionLock lock(criticalSection);
+					oldString = valueString;
+					valueString = nullptr;
+					atomicType = typeNumber;
+					valueNumber = value;
 				};
-
-				atomicType = typeNumber;
-				valueNumber = value;
-				criticalSection.leave();
+				delete[] oldString;
 			};
 
-			inline void setString(String value) {
-				criticalSection.enter();
-				if (atomicType == typeString) {
-					delete[] valueString;
+			inline void setString(const String &value) {
+				size_t length = value.length();
+				char *newString = new char[length + 1];
+				memcpy(newString, value.value(), length + 1);
+				char *oldString;
+				{
+					CriticalSectionLock lock(criticalSection);
+					oldString = valueString;
+					valueString = newString;
+					atomicType = typeString;
 				};
-
-				atomicType = typeString;
-				valueString = new char[value.length() + 1];
-				memcpy(valueString, value.value(), value.length() + 1);
-				criticalSection.leave();
+				delete[] oldString;
 			};
 	};
 

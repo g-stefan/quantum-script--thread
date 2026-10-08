@@ -1,5 +1,6 @@
 {
 	"solution": {
+		"namespace" : "xyo",
 		"name" : "quantum-script--thread",
 		"type" : "xyo-cpp",
 		"projects": [
@@ -31,6 +32,15 @@
 			},
 			{
 				"name" : "test.01",
+				"make" : "exe",
+				"category" : "test",
+				"SPDX-License-Identifier": "Unlicense",
+				"dependency" : [
+					"quantum-script--thread"
+				]
+			},
+			{
+				"name" : "test.03",
 				"make" : "exe",
 				"category" : "test",
 				"SPDX-License-Identifier": "Unlicense",

@@ -38,12 +38,17 @@ namespace XYO::QuantumScript::Extension::Thread {
 	Variable *VariableAtomic::newVariable() {
 		VariableAtomic *retV = TMemory<VariableAtomic>::newMemory();
 		retV->value = new Atomic();
-		retV->value->referenceCount++;
+		retV->value->incReferenceCount();
 		return (Variable *)retV;
 	};
 
 	Variable *VariableAtomic::instancePrototype() {
-		return (Extension::Thread::getContext())->prototypeAtomic->prototype;
+		// no prototype in a thread that did not require the extension
+		ThreadContext *threadContext = Extension::Thread::getContext();
+		if (!threadContext->prototypeAtomic) {
+			return nullptr;
+		};
+		return threadContext->prototypeAtomic->prototype;
 	};
 
 	void VariableAtomic::activeDestructor() {

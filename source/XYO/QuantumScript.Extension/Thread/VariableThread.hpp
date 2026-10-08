@@ -38,7 +38,7 @@ namespace XYO::QuantumScript::Extension::Thread {
 
 		public:
 			XYO::Multithreading::Thread thread;
-			bool requestToTerminateThread;
+			TAtomic<bool> requestToTerminateThread;
 			TPointer<Variable> returnValue;
 			TPointer<Variable> returnedValue;
 			Semaphore threadStarted;
@@ -46,7 +46,10 @@ namespace XYO::QuantumScript::Extension::Thread {
 			Semaphore threadTerminated;
 			//
 			Executive *executive;
+			// code of the thread function: source, or bytecode if the source is not available
 			String sourceCode;
+			Buffer bytecode;
+			int functionHint;
 			bool startedOk;
 			bool threadEnded;
 			SymbolList *symbolList;
@@ -76,6 +79,14 @@ namespace XYO::QuantumScript::Extension::Thread {
 			// ---
 
 			XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT bool start(Executive *executive_, String sourceCode_, Variable *functionThis_, Variable *functionArguments_);
+			XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT bool startBytecode(Executive *executive_, const Buffer &bytecode_, int functionHint_, Variable *functionThis_, Variable *functionArguments_);
+
+		protected:
+			bool start_(Executive *executive_, Variable *functionThis_, Variable *functionArguments_);
+			void releaseStartData_();
+			void collectReturnValue_();
+
+		public:
 			XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT void join();
 			XYO_QUANTUMSCRIPT_EXTENSION_THREAD_EXPORT bool isRunning();
 	};
